@@ -1,4 +1,5 @@
 services:
+  # REST API (данные из backend/data.csv)
   fastapi:
     build: .
     container_name: fastapi_service
@@ -7,12 +8,16 @@ services:
       - "8888:8888"
     restart: unless-stopped
 
+  # веб-интерфейс; обращается к API по имени сервиса fastapi
   streamlit:
     build: .
     container_name: streamlit_service
     environment:
       - API_URL=http://fastapi:8888
-    command: streamlit run frontend/app.py --server.address 0.0.0.0 --server.port 8889
+    command: >-
+      streamlit run frontend/app.py
+      --server.address 0.0.0.0
+      --server.port 8889
     ports:
       - "8889:8889"
     depends_on:
